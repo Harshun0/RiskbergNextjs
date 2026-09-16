@@ -71,10 +71,11 @@ function StatNum({ target, suffix }: { target: number; suffix: string }) {
       if (!e.isIntersecting) return;
       const start = performance.now();
       const dur = 1800;
+      const elEl = el;
       function frame(now: number) {
         const t = Math.min((now - start) / dur, 1);
         const ease = 1 - Math.pow(1 - t, 3);
-        el.textContent = Math.round(ease * target).toString();
+        elEl.textContent = Math.round(ease * target).toString();
         if (t < 1) requestAnimationFrame(frame);
       }
       requestAnimationFrame(frame);
@@ -117,6 +118,10 @@ export default function Partners() {
     const container = wallRef.current;
     const plane     = planeRef.current;
     if (!container || !plane) return;
+
+    // Capture as non-nullable locals for use inside closures
+    const safeContainer = container;
+    const safePlane     = plane;
 
     const reduced  = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const colItems = colItemsRef.current;
@@ -181,7 +186,7 @@ export default function Partners() {
 
     // Pointer: parallax + tile highlight
     function onMove(e: PointerEvent) {
-      const rect = container.getBoundingClientRect();
+      const rect = safeContainer.getBoundingClientRect();
       if (PARALLAX > 0 && !reduced) {
         ptrRef.current.x = (e.clientX - rect.left) / rect.width  - 0.5;
         ptrRef.current.y = (e.clientY - rect.top)  / rect.height - 0.5;
@@ -194,7 +199,7 @@ export default function Partners() {
       const id = tile.dataset.tileId;
       if (id === activeIdRef.current) return;
       if (activeIdRef.current) {
-        container.querySelector(`[data-tile-id="${activeIdRef.current}"]`)?.classList.remove('is-active');
+        safeContainer.querySelector(`[data-tile-id="${activeIdRef.current}"]`)?.classList.remove('is-active');
       }
       activeIdRef.current = id ?? null;
       tile.classList.add('is-active');
@@ -203,18 +208,18 @@ export default function Partners() {
     function onLeave() {
       ptrRef.current = { x: 0, y: 0 };
       if (activeIdRef.current) {
-        container.querySelector(`[data-tile-id="${activeIdRef.current}"]`)?.classList.remove('is-active');
+        safeContainer.querySelector(`[data-tile-id="${activeIdRef.current}"]`)?.classList.remove('is-active');
         activeIdRef.current = null;
       }
     }
 
-    container.addEventListener('pointermove', onMove as EventListener);
-    container.addEventListener('pointerleave', onLeave);
+    safeContainer.addEventListener('pointermove', onMove as EventListener);
+    safeContainer.addEventListener('pointerleave', onLeave);
 
     return () => {
       cancelAnimationFrame(rafRef.current);
-      container.removeEventListener('pointermove', onMove as EventListener);
-      container.removeEventListener('pointerleave', onLeave);
+      safeContainer.removeEventListener('pointermove', onMove as EventListener);
+      safeContainer.removeEventListener('pointerleave', onLeave);
     };
   }, []);
 
