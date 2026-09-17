@@ -6,10 +6,12 @@ import Partners from './components/Partners';
 import Testimonials from './components/Testimonials';
 import Industries from './components/Industries';
 import Footer from './components/Footer';
+import HashScroller from './components/ui/HashScroller';
 
 export default function Home() {
   return (
     <main>
+      <HashScroller />
       <Hero />
       <TrustBar />
       <Services />

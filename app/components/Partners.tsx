@@ -227,7 +227,7 @@ export default function Partners() {
   const unit     = TILE_H + GAP;
 
   return (
-    <section className="rb-section partners-section">
+    <section className="rb-section partners-section" id="partners">
       {/* Professional circuit-board background */}
       <div className="partners-bg" aria-hidden="true">
         <svg className="partners-bg-circuit" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid slice">

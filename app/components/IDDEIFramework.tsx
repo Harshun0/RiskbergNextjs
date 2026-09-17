@@ -203,14 +203,14 @@ export default function IDDEIFramework() {
 
               {/* Nodes */}
               {nodes.map(n => {
-                const size = n.large ? 44 : 38;
-                const rx = n.large ? 16 : 14;
-                const labelY = n.large ? 58 : 52;
+                const size = 44;
+                const rx = 16;
+                const labelY = 58;
                 const color = NODE_PALETTE[n.id % NODE_PALETTE.length];
                 return (
                   <g
                     key={n.id}
-                    className={`cb-node${n.id === 2 ? ' cb-node--processing' : ''}${n.large ? ' cb-node--lg' : ''}`}
+                    className="cb-node"
                     data-node={n.id}
                     transform={`translate(${n.x},100)`}
                     style={{ ['--node-color' as string]: color }}
